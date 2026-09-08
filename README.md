@@ -3,17 +3,17 @@
 ```sh
 ## 古文观止
 cd ./gwgz
-font assignment   #批量生成作业，运行一次后很少要跑
-font typeface -font-name Kexin -font-dir ../font -handin ./handin/<指定作业文件名> #叠加方式编辑字体文件, 作业文件名可以通过tab辅助填写,font文件在不同的书籍阅读中积累，所以放到上一级目录
-font publish html -font-name Kexin -font-dir ../font -text ./handout/<指定课文文件名> #逐一添加的方式生成html, 课文文件名可以通过tab辅助填写
+font assignment -book gwgz #批量生成作业，运行一次后很少要跑
+font typeface -font-name Kexin -handin ./handin/<指定作业文件名> #叠加方式编辑字体文件, 作业文件名可以通过tab辅助填写,font文件在不同的书籍阅读中积累，所以放到上一级目录
+font publish html -font-name Kexin -text ./text/<指定课文文件名> #逐一添加的方式生成html, 课文文件名可以通过tab辅助填写
 ```
 
 ```sh
 ## 东坡诗话
 cd ./dpsh
-font assignment -text ./text/20260908   #东坡诗话的数据源没有经过切割，以晶晶的阅读进度按日交给可心学习和写字
-font typeface -font-name Kexin -font-dir ../font -handin ./handin/<指定作业文件名> #叠加方式编辑字体文件, 作业文件名可以通过tab辅助填写,font文件在不同的书籍阅读中积累，所以放到上一级目录
-font publish html -font-name Kexin -font-dir ../font -text ./handout/<指定课文文件名> #逐一添加的方式生成html, 课文文件名可以通过tab辅助填写
+font assignment -book dpsh -text ./text/20260908   #东坡诗话的数据源没有经过切割，以晶晶的阅读进度按日交给可心学习和写字
+font typeface -font-name Kexin -handin ./handin/<指定作业文件名> #叠加方式编辑字体文件, 作业文件名可以通过tab辅助填写,font文件在不同的书籍阅读中积累，所以放到上一级目录
+font publish html -font-name Kexin -text ./text/<指定课文文件名> #逐一添加的方式生成html, 课文文件名可以通过tab辅助填写
 ```
 
 # 学习书目
