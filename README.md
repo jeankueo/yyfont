@@ -4,8 +4,16 @@
 ## 古文观止
 cd ./gwgz
 font assignment -book gwgz #批量生成作业，运行一次后很少要跑
-font typeface -font-name Kexin -handin ./handin/<指定作业文件名> #叠加方式编辑字体文件, 作业文件名可以通过tab辅助填写,font文件在不同的书籍阅读中积累，所以放到上一级目录
-font publish html -font-name Kexin -text ./text/<指定课文文件名> #逐一添加的方式生成html, 课文文件名可以通过tab辅助填写
+
+#叠加方式编辑字体文件, 作业文件名可以通过tab辅助填写,font文件在不同的书籍阅读中积累，所以放到上一级目录
+font typeface -font-name Kexin -handin ./handin/<指定作业文件名> 
+#批量重新生成所有字的字体
+font typeface -font-name Kexin -handin ./handin/  
+
+#逐一添加的方式生成html, 课文文件名可以通过tab辅助填写
+font publish html -font-name Kexin -text ./text/<指定课文文件名> 
+# 可心每次handin过得课文被复制到./text/done，因此字库每次更新时也可以批量化重新生成html
+font publish html -font-name Kexin -text ./text/<指定课文文件名> 
 ```
 
 ```sh
