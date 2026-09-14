@@ -14,6 +14,8 @@ font typeface -font-name Kexin -handin ./handin
 font publish html -font-name Kexin -text ./text/<指定课文文件名> 
 # 可心每次handin过得课文被复制到./text/done，因此字库每次更新时也可以批量化重新生成html
 font publish html -font-name Kexin -text ./text/done
+# 可心每次handin过得课文被复制到./text/done，因此字库每次更新时也可以重新生成epub
+font publish epub -font-name Kexin -text ./text/done -epub-name 古文观止-可心手抄本
 ```
 
 ```sh
@@ -32,3 +34,15 @@ font publish html -font-name Kexin -text ./text/<指定课文文件名> #逐一�
 - [数据来源](https://github.com/niuniu-869/guwenguanzhi)
 - [在线浏览](https://niuniu-869.github.io/guwenguanzhi/)
 
+# 游戏时间兑换
+## 积分榜
+|课文编号|活动|字数|完成日期    |游戏时间(h)|兑换日期|
+|---    |---|---|---        |---    |---    |
+|001    |抄写|   |before     |/      |/      |
+|016    |抄写|   |before     |/      |/      |
+|018    |抄写|   |before     |/      |/      |
+|027    |抄写|   |before     |/      |/      |
+|039    |抄写|   |before     |/      |/      |
+|040    |抄写|   |before     |/      |/      |
+|008    |抄写|   |2026.09.14 |       |       |
+|047    |抄写|   |2026.09.14 |       |       |
