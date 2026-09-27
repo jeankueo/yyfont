@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>可心积分</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --color-bg: #f5f6fa;
+      --color-surface: #ffffff;
+      --color-border: #e6e8f0;
+      --color-text: #1a1a2e;
+      --color-muted: #6b7280;
+      --color-accent: #5b5ea6;
+      --color-accent-light: #ededf8;
+      --color-green: #16a34a;
+      --color-green-light: #dcfce7;
+      --color-amber: #d97706;
+      --color-amber-light: #fef3c7;
+      --color-red: #dc2626;
+      --color-red-light: #fee2e2;
+      --radius: 8px;
+      --shadow: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", sans-serif;
+      background: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.6;
+      font-size: 15px;
+    }
+
+    header {
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      height: 56px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: var(--shadow);
+    }
+    header h1 { font-size: 18px; font-weight: 700; color: var(--color-accent); }
+    header .updated { margin-left: auto; font-size: 12px; color: var(--color-muted); }
+
+    main {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 24px 20px 60px;
+    }
+
+    /* summary bar */
+    .summary-bar {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .stat-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+    .stat-card .label { font-size: 13px; color: var(--color-muted); margin-bottom: 4px; }
+    .stat-card .value { font-size: 36px; font-weight: 700; line-height: 1.1; }
+    .stat-card.total .value  { color: var(--color-accent); }
+    .stat-card.avail .value  { color: var(--color-green); }
+    .stat-card.avail.negative .value { color: var(--color-red); }
+
+    /* section */
+    section {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+    .section-header {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-header h2 { font-size: 15px; font-weight: 600; }
+    .section-header .badge {
+      margin-left: auto;
+      font-size: 12px;
+      background: var(--color-accent-light);
+      color: var(--color-accent);
+      border-radius: 12px;
+      padding: 2px 10px;
+      font-weight: 600;
+    }
+
+    /* rules grid */
+    .rules-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+    }
+    .rule-cell {
+      padding: 16px 20px;
+      border-right: 1px solid var(--color-border);
+    }
+    .rule-cell:last-child { border-right: none; }
+    .rule-cell .rule-title { font-size: 12px; color: var(--color-muted); margin-bottom: 6px; }
+    .rule-cell .rule-formula { font-size: 14px; font-weight: 600; color: var(--color-text); }
+    .rule-cell .rule-note { font-size: 12px; color: var(--color-muted); margin-top: 4px; }
+
+    /* table */
+    table { width: 100%; border-collapse: collapse; }
+    thead th {
+      padding: 10px 16px;
+      text-align: left;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      color: var(--color-muted);
+      border-bottom: 1px solid var(--color-border);
+      background: #fafbfc;
+    }
+    tbody tr { border-bottom: 1px solid var(--color-border); }
+    tbody tr:last-child { border-bottom: none; }
+    tbody td { padding: 10px 16px; font-size: 14px; }
+    tbody tr:hover { background: #fafbfc; }
+
+    .pts-chip {
+      display: inline-block;
+      background: var(--color-accent-light);
+      color: var(--color-accent);
+      border-radius: 10px;
+      padding: 1px 9px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .pts-chip.redeem {
+      background: var(--color-red-light);
+      color: var(--color-red);
+    }
+
+    .loading { padding: 32px; text-align: center; color: var(--color-muted); }
+    .error   { padding: 20px; color: var(--color-red); }
+
+    .name-cell { font-family: ui-monospace, monospace; font-size: 13px; }
+    .time-cell { color: var(--color-muted); font-size: 13px; white-space: nowrap; }
+    .tag {
+      font-size: 11px;
+      padding: 1px 7px;
+      border-radius: 8px;
+      font-weight: 600;
+    }
+    .tag-halfday { background: var(--color-amber-light); color: var(--color-amber); }
+    .tag-hour    { background: var(--color-green-light); color: var(--color-green); }
+    .tag-point   { background: var(--color-accent-light); color: var(--color-accent); }
+
+    @media (max-width: 600px) {
+      .rules-grid { grid-template-columns: 1fr; }
+      .rule-cell { border-right: none; border-bottom: 1px solid var(--color-border); }
+      .rule-cell:last-child { border-bottom: none; }
+      .summary-bar { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>可心积分</h1>
+  <span class="updated" id="updated-time"></span>
+</header>
+
+<main>
+  <div id="root"><div class="loading">加载中…</div></div>
+</main>
+
+<script>
+function fmt(n) { return n >= 0 ? '+' + n : String(n); }
+
+function renderTable(data) {
+  const d = data;
+  const fontTotal = d['point-font'].reduce((s, r) => s + r.points, 0);
+  const readTotal = Object.values(d['point-read']).reduce((s, r) => s + r.points, 0);
+  const redeemTotal = d.redeem.reduce((s, r) => s + r.points, 0);
+  const available = d.total - redeemTotal;
+  const isNeg = available < 0;
+
+  // updated time from last redeem or font entry
+  const times = [
+    ...d['point-font'].map(r => r.time),
+    ...d.redeem.map(r => r.time),
+  ].sort();
+  const lastTime = times[times.length - 1] || '';
+  document.getElementById('updated-time').textContent = lastTime ? '更新于 ' + lastTime.slice(0, 10) : '';
+
+  const fontRows = [...d['point-font']].reverse().map(r => `
+    <tr>
+      <td class="name-cell">${r.name.replace(/_p\d+\.png$/, '').replace(/^\d+_/, '')}<br>
+          <span class="time-cell">${r.name.match(/_p(\d+)\.png$/)?.[0].replace('.png','') || ''}</span></td>
+      <td class="time-cell">${r.time}</td>
+      <td><span class="pts-chip">+${r.points}</span></td>
+    </tr>`).join('');
+
+  const readRows = Object.entries(d['point-read']).reverse().map(([key, val]) => `
+    <tr>
+      <td>${key.replace(/^\d+_/, '')}</td>
+      <td>${val['no-of-char']} 字</td>
+      <td><span class="pts-chip">+${val.points}</span></td>
+    </tr>`).join('');
+
+  const redeemRows = [...d.redeem].reverse().map(r => {
+    let tag = '';
+    if (r.halfday) tag = '<span class="tag tag-halfday">半天</span>';
+    else if (r.hour != null) tag = `<span class="tag tag-hour">${r.hour}h</span>`;
+    else tag = '<span class="tag tag-point">积分</span>';
+    return `
+    <tr>
+      <td class="time-cell">${r.time}</td>
+      <td>${tag} ${r.message || ''}</td>
+      <td><span class="pts-chip redeem">-${r.points}</span></td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('root').innerHTML = `
+    <div class="summary-bar">
+      <div class="stat-card total">
+        <div class="label">累计积分</div>
+        <div class="value">${d.total}</div>
+      </div>
+      <div class="stat-card avail ${isNeg ? 'negative' : ''}">
+        <div class="label">可用积分</div>
+        <div class="value">${d.available}</div>
+      </div>
+    </div>
+
+    <section>
+      <div class="section-header"><h2>积分规则</h2></div>
+      <div class="rules-grid">
+        <div class="rule-cell">
+          <div class="rule-title">抄写</div>
+          <div class="rule-formula">每字 1 分</div>
+          <div class="rule-note">根据字帖行宽统计完成字数</div>
+        </div>
+        <div class="rule-cell">
+          <div class="rule-title">阅读</div>
+          <div class="rule-formula">⌈字数 ÷ 20⌉ 分</div>
+          <div class="rule-note">有余数则进一，最少 1 分</div>
+        </div>
+        <div class="rule-cell">
+          <div class="rule-title">兑换</div>
+          <div class="rule-formula">半天 60 分 · 每小时 36 分</div>
+          <div class="rule-note">或直接指定兑换积分数</div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-header">
+        <h2>抄写记录</h2>
+        <span class="badge">${d['point-font'].length} 次 · 共 ${fontTotal} 分</span>
+      </div>
+      <table>
+        <thead><tr><th>课文</th><th>时间</th><th>积分</th></tr></thead>
+        <tbody>${fontRows}</tbody>
+      </table>
+    </section>
+
+    <section>
+      <div class="section-header">
+        <h2>阅读记录</h2>
+        <span class="badge">${Object.keys(d['point-read']).length} 篇 · 共 ${readTotal} 分</span>
+      </div>
+      <table>
+        <thead><tr><th>课文</th><th>字数</th><th>积分</th></tr></thead>
+        <tbody>${readRows || '<tr><td colspan="3" style="color:var(--color-muted);padding:16px">暂无记录</td></tr>'}</tbody>
+      </table>
+    </section>
+
+    <section>
+      <div class="section-header">
+        <h2>兑换记录</h2>
+        <span class="badge">${d.redeem.length} 次 · 共 ${redeemTotal} 分</span>
+      </div>
+      <table>
+        <thead><tr><th>时间</th><th>说明</th><th>积分</th></tr></thead>
+        <tbody>${redeemRows || '<tr><td colspan="3" style="color:var(--color-muted);padding:16px">暂无记录</td></tr>'}</tbody>
+      </table>
+    </section>
+  `;
+}
+
+fetch('points.json')
+  .then(r => r.ok ? r.json() : Promise.reject(r.status))
+  .then(renderTable)
+  .catch(err => {
+    document.getElementById('root').innerHTML =
+      `<div class="error">无法加载 points.json（${err}）</div>`;
+  });
+</script>
+</body>
+</html>
