@@ -47,6 +47,11 @@
     }
     header h1 { font-size: 18px; font-weight: 700; color: var(--color-accent); }
     header .updated { margin-left: auto; font-size: 12px; color: var(--color-muted); }
+    header .lang-link { margin-left: 16px; font-size: 12px; color: var(--color-accent); text-decoration: none; border: 1px solid var(--color-accent); border-radius: 10px; padding: 2px 10px; }
+    header .lang-link:hover { background: var(--color-accent-light); }
+
+    .scroll-body { max-height: 320px; overflow-y: auto; }
+    .scroll-body thead th { position: sticky; top: 0; z-index: 1; }
 
     main {
       max-width: 860px;
@@ -179,6 +184,7 @@
 <header>
   <h1>可心积分</h1>
   <span class="updated" id="updated-time"></span>
+  <a class="lang-link" href="index_en.html">English</a>
 </header>
 
 <main>
@@ -267,7 +273,9 @@ function renderTable(data) {
         <div class="rule-cell">
           <div class="rule-title">兑换</div>
           <div class="rule-formula">半天 60 分 · 每小时 36 分</div>
-          <div class="rule-note">或直接指定兑换积分数</div>
+          <div class="rule-note">工作日每周最多累计 2 小时</div>
+          <div class="rule-note">周末每周最多兑换一次半天</div>
+          <div class="rule-note" style="padding-left:8px">↳ 16 点起批准全天</div>
         </div>
       </div>
     </section>
@@ -277,10 +285,10 @@ function renderTable(data) {
         <h2>抄写记录</h2>
         <span class="badge">${d['point-font'].length} 次 · 共 ${fontTotal} 分</span>
       </div>
-      <table>
+      <div class="scroll-body"><table>
         <thead><tr><th>课文</th><th>时间</th><th>积分</th></tr></thead>
         <tbody>${fontRows}</tbody>
-      </table>
+      </table></div>
     </section>
 
     <section>
@@ -288,21 +296,21 @@ function renderTable(data) {
         <h2>阅读记录</h2>
         <span class="badge">${Object.keys(d['point-read']).length} 篇 · 共 ${readTotal} 分</span>
       </div>
-      <table>
+      <div class="scroll-body"><table>
         <thead><tr><th>课文</th><th>字数</th><th>积分</th></tr></thead>
         <tbody>${readRows || '<tr><td colspan="3" style="color:var(--color-muted);padding:16px">暂无记录</td></tr>'}</tbody>
-      </table>
+      </table></div>
     </section>
 
     <section>
       <div class="section-header">
-        <h2>兑换记录</h2>
+        <h2>游戏时间兑换</h2>
         <span class="badge">${d.redeem.length} 次 · 共 ${redeemTotal} 分</span>
       </div>
-      <table>
+      <div class="scroll-body"><table>
         <thead><tr><th>时间</th><th>说明</th><th>积分</th></tr></thead>
         <tbody>${redeemRows || '<tr><td colspan="3" style="color:var(--color-muted);padding:16px">暂无记录</td></tr>'}</tbody>
-      </table>
+      </table></div>
     </section>
   `;
 }
