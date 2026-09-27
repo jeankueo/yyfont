@@ -1,11 +1,35 @@
 {
   "total": 389,
-  "available": 222,
+  "available": 54,
   "redeem": [
     {
       "time": "2026-09-27 18:46:43",
       "points": 167,
       "message": "summer vacation 001-p1, 016, 018, 027, 039, 040"
+    },
+    {
+      "time": "2026-09-27 18:55:30",
+      "hour": 1.0,
+      "points": 36,
+      "message": "9.14"
+    },
+    {
+      "time": "2026-09-27 18:55:55",
+      "hour": 1.0,
+      "points": 36,
+      "message": "9.15"
+    },
+    {
+      "time": "2026-09-27 18:56:24",
+      "halfday": true,
+      "points": 60,
+      "message": "9.19"
+    },
+    {
+      "time": "2026-09-27 18:56:45",
+      "hour": 1.0,
+      "points": 36,
+      "message": "9.20"
     }
   ],
   "point-font": [
