@@ -35,7 +35,5 @@ font publish html -font-name Kexin -text ./text/<指定课文文件名> #逐一�
 - [在线浏览](https://niuniu-869.github.io/guwenguanzhi/)
 
 # 游戏时间兑换
-## 兑换规则
-阅读一篇兑换2小时
-抄写3行兑换1小时
-抄写5行可以兑换1下午 一个周最多兑换一次1下午
+[兑换状态](https://jeankueo.github.io/yyfont)
+
