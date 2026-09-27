@@ -153,6 +153,8 @@
     .error   { padding: 20px; color: var(--color-red); }
 
     .name-cell { font-family: ui-monospace, monospace; font-size: 13px; }
+    .name-cell a { color: var(--color-accent); text-decoration: none; }
+    .name-cell a:hover { text-decoration: underline; }
     .time-cell { color: var(--color-muted); font-size: 13px; white-space: nowrap; }
     .tag {
       font-size: 11px;
@@ -202,13 +204,20 @@ function renderTable(data) {
   const lastTime = times[times.length - 1] || '';
   document.getElementById('updated-time').textContent = lastTime ? '更新于 ' + lastTime.slice(0, 10) : '';
 
-  const fontRows = [...d['point-font']].reverse().map(r => `
+  const fontRows = [...d['point-font']].reverse().map(r => {
+    const lessonKey = r.name.replace(/_p\d+\.png$/, '');
+    const lessonName = lessonKey.replace(/^\d+_/, '');
+    const pageTag = r.name.match(/_p(\d+)\.png$/)?.[0].replace('.png', '') || '';
+    const book = r.book || 'gwgz';
+    const href = `${book}/html/${lessonKey}.html`;
+    return `
     <tr>
-      <td class="name-cell">${r.name.replace(/_p\d+\.png$/, '').replace(/^\d+_/, '')}<br>
-          <span class="time-cell">${r.name.match(/_p(\d+)\.png$/)?.[0].replace('.png','') || ''}</span></td>
+      <td class="name-cell"><a href="${href}" target="_blank">${lessonName}</a><br>
+          <span class="time-cell">${pageTag}</span></td>
       <td class="time-cell">${r.time}</td>
       <td><span class="pts-chip">+${r.points}</span></td>
-    </tr>`).join('');
+    </tr>`;
+  }).join('');
 
   const readRows = Object.entries(d['point-read']).reverse().map(([key, val]) => `
     <tr>
