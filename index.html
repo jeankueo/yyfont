@@ -298,12 +298,12 @@ function renderTable(data) {
   `;
 }
 
-fetch('points.json')
+fetch('font/points.json')
   .then(r => r.ok ? r.json() : Promise.reject(r.status))
   .then(renderTable)
   .catch(err => {
     document.getElementById('root').innerHTML =
-      `<div class="error">无法加载 points.json（${err}）</div>`;
+      `<div class="error">无法加载 font/points.json（${err}）</div>`;
   });
 </script>
 </body>
