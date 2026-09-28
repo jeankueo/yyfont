@@ -203,6 +203,7 @@ function renderTable(data) {
 
   const times = [
     ...fontEntries.map(r => r.time),
+    ...readEntries.map(r => r.time).filter(Boolean),
     ...d.redeem.map(r => r.time),
   ].sort();
   const lastTime = times[times.length - 1] || '';
@@ -227,6 +228,7 @@ function renderTable(data) {
     <tr>
       <td>${r.key.replace(/^\d+_/, '')}</td>
       <td><span class="tag tag-book">${r._book}</span></td>
+      <td class="time-cell">${r.time || ''}</td>
       <td>${r['no-of-char']} chars</td>
       <td><span class="pts-chip">+${r.points}</span></td>
     </tr>`).join('');
@@ -296,7 +298,7 @@ function renderTable(data) {
         <span class="badge">${readEntries.length} texts · ${readTotal} pts</span>
       </div>
       <div class="scroll-body"><table>
-        <thead><tr><th>Text</th><th>Book</th><th>Characters</th><th>Points</th></tr></thead>
+        <thead><tr><th>Text</th><th>Book</th><th>Date</th><th>Characters</th><th>Points</th></tr></thead>
         <tbody>${readRows || '<tr><td colspan="3" style="color:var(--color-muted);padding:16px">No entries yet</td></tr>'}</tbody>
       </table></div>
     </section>

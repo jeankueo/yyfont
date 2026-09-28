@@ -210,6 +210,7 @@ function renderTable(data) {
   // updated time from last redeem or font entry
   const times = [
     ...fontEntries.map(r => r.time),
+    ...readEntries.map(r => r.time).filter(Boolean),
     ...d.redeem.map(r => r.time),
   ].sort();
   const lastTime = times[times.length - 1] || '';
@@ -234,6 +235,7 @@ function renderTable(data) {
     <tr>
       <td>${r.key.replace(/^\d+_/, '')}</td>
       <td><span class="tag tag-book">${r._book}</span></td>
+      <td class="time-cell">${r.time || ''}</td>
       <td>${r['no-of-char']} 字</td>
       <td><span class="pts-chip">+${r.points}</span></td>
     </tr>`).join('');
@@ -303,7 +305,7 @@ function renderTable(data) {
         <span class="badge">${readEntries.length} 篇 · 共 ${readTotal} 分</span>
       </div>
       <div class="scroll-body"><table>
-        <thead><tr><th>课文</th><th>书</th><th>字数</th><th>积分</th></tr></thead>
+        <thead><tr><th>课文</th><th>书</th><th>时间</th><th>字数</th><th>积分</th></tr></thead>
         <tbody>${readRows || '<tr><td colspan="3" style="color:var(--color-muted);padding:16px">暂无记录</td></tr>'}</tbody>
       </table></div>
     </section>
