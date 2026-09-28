@@ -16,6 +16,10 @@ font publish html -font-name Kexin -text ./text/<指定课文文件名>
 font publish html -font-name Kexin -text ./text/done
 # 可心每次handin过得课文被复制到./text/done，因此字库每次更新时也可以重新生成epub
 font publish epub -font-name Kexin -text ./text/done -epub-name 古文观止-可心手抄本
+
+# 添加积分 - 这两个命令必须在书名目录下运行，默认当前目录名为书名
+font point add-write -handin ./handin
+font point add-read -text ./text/<指定课文文件名> 
 ```
 
 ```sh
@@ -24,6 +28,10 @@ cd ./dpsh
 font assignment -book dpsh -text ./text/20260908   #东坡诗话的数据源没有经过切割，以晶晶的阅读进度按日交给可心学习和写字
 font typeface -font-name Kexin -handin ./handin/<指定作业文件名> #叠加方式编辑字体文件, 作业文件名可以通过tab辅助填写,font文件在不同的书籍阅读中积累，所以放到上一级目录
 font publish html -font-name Kexin -text ./text/<指定课文文件名> #逐一添加的方式生成html, 课文文件名可以通过tab辅助填写
+
+# 添加积分 - 这两个命令必须在书名目录下运行，默认当前目录名为书名
+font point add-write -handin ./handin
+font point add-read -text ./text/<指定课文文件名> 
 ```
 
 # 学习书目
