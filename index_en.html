@@ -145,10 +145,8 @@
       font-size: 13px;
       font-weight: 600;
     }
-    .pts-chip.redeem {
-      background: var(--color-red-light);
-      color: var(--color-red);
-    }
+    .pts-chip.redeem { background: var(--color-red-light);   color: var(--color-red); }
+    .pts-chip.bonus  { background: var(--color-green-light); color: var(--color-green); }
 
     .loading { padding: 32px; text-align: center; color: var(--color-muted); }
     .error   { padding: 20px; color: var(--color-red); }
@@ -292,15 +290,20 @@ function renderTable(data) {
   }).join('');
 
   const redeemRows = [...d.redeem].reverse().map(r => {
+    const isBonus = r.points < 0;
     let tag = '';
     if (r.halfday) tag = '<span class="tag tag-halfday">half-day</span>';
     else if (r.hour != null) tag = `<span class="tag tag-hour">${r.hour}h</span>`;
     else tag = '<span class="tag tag-point">pts</span>';
+    const chip = isBonus
+      ? `<span class="pts-chip bonus">+${Math.abs(r.points)}</span>`
+      : `<span class="pts-chip redeem">-${r.points}</span>`;
+    const msg = isBonus ? `🎉 ${r.message || ''}` : (r.message || '');
     return `
     <tr>
       <td class="time-cell">${r.time}</td>
-      <td>${tag} ${r.message || ''}</td>
-      <td><span class="pts-chip redeem">-${r.points}</span></td>
+      <td>${tag} ${msg}</td>
+      <td>${chip}</td>
     </tr>`;
   }).join('');
 
