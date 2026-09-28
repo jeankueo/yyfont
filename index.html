@@ -299,8 +299,9 @@ function renderTable(data) {
   const redeemRows = [...d.redeem].reverse().map(r => {
     const isBonus = r.points < 0;
     let tag = '';
-    if (r.halfday) tag = '<span class="tag tag-halfday">半天</span>';
-    else if (r.hour != null) tag = `<span class="tag tag-hour">${r.hour}h</span>`;
+    if (isBonus) tag = '<span class="tag tag-point">奖励</span>';
+    else if (r.halfday) tag = '<span class="tag tag-halfday">半天</span>';
+    else if (r.hour != null) tag = `<span class="tag tag-hour">${r.hour}小时</span>`;
     else tag = '<span class="tag tag-point">积分</span>';
     const chip = isBonus
       ? `<span class="pts-chip bonus">+${Math.abs(r.points)}</span>`

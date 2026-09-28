@@ -292,7 +292,8 @@ function renderTable(data) {
   const redeemRows = [...d.redeem].reverse().map(r => {
     const isBonus = r.points < 0;
     let tag = '';
-    if (r.halfday) tag = '<span class="tag tag-halfday">half-day</span>';
+    if (isBonus) tag = '<span class="tag tag-point">bonus</span>';
+    else if (r.halfday) tag = '<span class="tag tag-halfday">half-day</span>';
     else if (r.hour != null) tag = `<span class="tag tag-hour">${r.hour}h</span>`;
     else tag = '<span class="tag tag-point">pts</span>';
     const chip = isBonus
