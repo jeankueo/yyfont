@@ -1,6 +1,6 @@
 {
-  "total": 384,
-  "available": 36,
+  "total": 402,
+  "available": 54,
   "redeem": [
     {
       "time": "2026-09-27 18:46:43",
@@ -113,6 +113,10 @@
       "008_曹刿论战": {
         "no-of-char": 316,
         "points": 16
+      },
+      "042_叔向贺贫": {
+        "no-of-char": 351,
+        "points": 18
       }
     },
     "dpsh": {
