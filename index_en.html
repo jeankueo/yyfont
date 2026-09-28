@@ -190,25 +190,29 @@
 <script>
 function renderTable(data) {
   const d = data;
-  const fontTotal = d['point-font'].reduce((s, r) => s + r.points, 0);
-  const readTotal = Object.values(d['point-read']).reduce((s, r) => s + r.points, 0);
+  const fontEntries = Object.entries(d['point-font'])
+    .flatMap(([book, entries]) => entries.map(r => ({...r, _book: book})))
+    .sort((a, b) => a.time < b.time ? -1 : 1);
+  const fontTotal = fontEntries.reduce((s, r) => s + r.points, 0);
+  const readEntries = Object.entries(d['point-read'])
+    .flatMap(([, lessons]) => Object.entries(lessons).map(([key, val]) => ({key, ...val})));
+  const readTotal = readEntries.reduce((s, r) => s + r.points, 0);
   const redeemTotal = d.redeem.reduce((s, r) => s + r.points, 0);
   const available = d.total - redeemTotal;
   const isNeg = available < 0;
 
   const times = [
-    ...d['point-font'].map(r => r.time),
+    ...fontEntries.map(r => r.time),
     ...d.redeem.map(r => r.time),
   ].sort();
   const lastTime = times[times.length - 1] || '';
   document.getElementById('updated-time').textContent = lastTime ? 'Updated ' + lastTime.slice(0, 10) : '';
 
-  const fontRows = [...d['point-font']].reverse().map(r => {
+  const fontRows = [...fontEntries].reverse().map(r => {
     const lessonKey = r.name.replace(/_p\d+\.png$/, '');
     const lessonName = lessonKey.replace(/^\d+_/, '');
     const pageTag = r.name.match(/_p(\d+)\.png$/)?.[0].replace('.png', '') || '';
-    const book = r.book || 'gwgz';
-    const href = `${book}/html/${lessonKey}.html`;
+    const href = `${r._book}/html/${lessonKey}.html`;
     return `
     <tr>
       <td class="name-cell"><a href="${href}" target="_blank">${lessonName}</a><br>
@@ -218,11 +222,11 @@ function renderTable(data) {
     </tr>`;
   }).join('');
 
-  const readRows = Object.entries(d['point-read']).reverse().map(([key, val]) => `
+  const readRows = [...readEntries].reverse().map(r => `
     <tr>
-      <td>${key.replace(/^\d+_/, '')}</td>
-      <td>${val['no-of-char']} chars</td>
-      <td><span class="pts-chip">+${val.points}</span></td>
+      <td>${r.key.replace(/^\d+_/, '')}</td>
+      <td>${r['no-of-char']} chars</td>
+      <td><span class="pts-chip">+${r.points}</span></td>
     </tr>`).join('');
 
   const redeemRows = [...d.redeem].reverse().map(r => {
@@ -276,7 +280,7 @@ function renderTable(data) {
     <section>
       <div class="section-header">
         <h2>Calligraphy Log</h2>
-        <span class="badge">${d['point-font'].length} sessions · ${fontTotal} pts</span>
+        <span class="badge">${fontEntries.length} sessions · ${fontTotal} pts</span>
       </div>
       <div class="scroll-body"><table>
         <thead><tr><th>Lesson</th><th>Date</th><th>Points</th></tr></thead>
@@ -287,7 +291,7 @@ function renderTable(data) {
     <section>
       <div class="section-header">
         <h2>Reading Log</h2>
-        <span class="badge">${Object.keys(d['point-read']).length} texts · ${readTotal} pts</span>
+        <span class="badge">${readEntries.length} texts · ${readTotal} pts</span>
       </div>
       <div class="scroll-body"><table>
         <thead><tr><th>Text</th><th>Characters</th><th>Points</th></tr></thead>
