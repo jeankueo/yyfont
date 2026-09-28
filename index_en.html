@@ -153,7 +153,8 @@
     .loading { padding: 32px; text-align: center; color: var(--color-muted); }
     .error   { padding: 20px; color: var(--color-red); }
 
-    .name-cell { font-family: ui-monospace, monospace; font-size: 13px; }
+    .img-icon { color: var(--color-muted); margin-left: 5px; vertical-align: middle; text-decoration: none; }
+    .img-icon:hover { color: var(--color-accent); }
     .name-cell a { color: var(--color-accent); text-decoration: none; }
     .name-cell a:hover { text-decoration: underline; }
     .time-cell { color: var(--color-muted); font-size: 13px; white-space: nowrap; }
@@ -255,7 +256,7 @@ function renderTable(data) {
     const href = `${r._book}/html/${lessonKey}.html`;
     return `
     <tr>
-      <td class="name-cell"><a href="#" onclick="openModal('${href}');return false">${lessonName}</a><br>
+      <td class="name-cell"><a href="#" onclick="openModal('${href}');return false">${lessonName}</a><a href="#" class="img-icon" onclick="openModal('${r._book}/handin/${r.name}');return false" title="View handwriting"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></a><br>
           <span class="time-cell">${pageTag}</span></td>
       <td><span class="tag tag-book">${r._book}</span></td>
       <td class="time-cell">${r.time}</td>
@@ -268,7 +269,7 @@ function renderTable(data) {
     const nameCell = r.text ? `<a href="#" onclick="openModal('${r.text}');return false">${name}</a>` : name;
     return `
     <tr>
-      <td>${nameCell}</td>
+      <td class="name-cell">${nameCell}</td>
       <td><span class="tag tag-book">${r._book}</span></td>
       <td class="time-cell">${r.time || ''}</td>
       <td>${r['no-of-char']} chars</td>
