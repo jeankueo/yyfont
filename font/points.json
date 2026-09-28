@@ -108,16 +108,19 @@
     "gwgz": {
       "002_周郑交质": {
         "time": "2026-09-05 14:58:12",
+        "text": "gwgz/text/01_pre_qin/002_周郑交质.txt",
         "no-of-char": 236,
         "points": 12
       },
       "008_曹刿论战": {
         "time": "2026-09-14 17:31:09",
+        "text": "gwgz/text/01_pre_qin/008_曹刿论战.txt",
         "no-of-char": 316,
         "points": 16
       },
       "042_叔向贺贫": {
         "time": "2026-09-28 22:15:12",
+        "text": "gwgz/text/01_pre_qin/042_叔向贺贫.txt",
         "no-of-char": 351,
         "points": 18
       }
@@ -125,6 +128,7 @@
     "dpsh": {
       "001_与佛印少游_忙忙忙_急急急": {
         "time": "2026-09-10 12:15:10",
+        "text": "dpsh/text/20260908/001_与佛印少游_忙忙忙_急急急.txt",
         "no-of-char": 247,
         "points": 13
       }

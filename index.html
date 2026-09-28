@@ -168,6 +168,36 @@
       font-weight: 600;
     }
     .tag-book    { background: #e0f2fe; color: #0369a1; }
+
+    #modal-backdrop {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.45);
+      z-index: 100;
+      display: flex; align-items: center; justify-content: center;
+    }
+    #modal-backdrop.hidden { display: none; }
+    #modal-box {
+      background: var(--color-surface);
+      border-radius: var(--radius);
+      box-shadow: 0 8px 32px rgba(0,0,0,.25);
+      width: min(820px, 92vw);
+      height: 78vh;
+      display: flex; flex-direction: column;
+      overflow: hidden;
+    }
+    #modal-header {
+      display: flex; align-items: center; justify-content: flex-end;
+      padding: 6px 10px;
+      border-bottom: 1px solid var(--color-border);
+      flex-shrink: 0;
+    }
+    #modal-close {
+      background: none; border: none; cursor: pointer;
+      font-size: 20px; color: var(--color-muted);
+      line-height: 1; padding: 2px 8px; border-radius: 4px;
+    }
+    #modal-close:hover { background: var(--color-border); color: var(--color-text); }
+    #modal-frame { flex: 1; border: none; width: 100%; }
     .tag-hour    { background: var(--color-green-light); color: var(--color-green); }
     .tag-point   { background: var(--color-accent-light); color: var(--color-accent); }
 
@@ -190,6 +220,13 @@
 <main>
   <div id="root"><div class="loading">加载中…</div></div>
 </main>
+
+<div id="modal-backdrop" class="hidden">
+  <div id="modal-box">
+    <div id="modal-header"><button id="modal-close" title="关闭 (Esc)">×</button></div>
+    <iframe id="modal-frame" src="about:blank"></iframe>
+  </div>
+</div>
 
 <script>
 function fmt(n) { return n >= 0 ? '+' + n : String(n); }
@@ -223,7 +260,7 @@ function renderTable(data) {
     const href = `${r._book}/html/${lessonKey}.html`;
     return `
     <tr>
-      <td class="name-cell"><a href="${href}" target="_blank">${lessonName}</a><br>
+      <td class="name-cell"><a href="#" onclick="openModal('${href}');return false">${lessonName}</a><br>
           <span class="time-cell">${pageTag}</span></td>
       <td><span class="tag tag-book">${r._book}</span></td>
       <td class="time-cell">${r.time}</td>
@@ -231,14 +268,18 @@ function renderTable(data) {
     </tr>`;
   }).join('');
 
-  const readRows = [...readEntries].reverse().map(r => `
+  const readRows = [...readEntries].reverse().map(r => {
+    const name = r.key.replace(/^\d+_/, '');
+    const nameCell = r.text ? `<a href="#" onclick="openModal('${r.text}');return false">${name}</a>` : name;
+    return `
     <tr>
-      <td>${r.key.replace(/^\d+_/, '')}</td>
+      <td>${nameCell}</td>
       <td><span class="tag tag-book">${r._book}</span></td>
       <td class="time-cell">${r.time || ''}</td>
       <td>${r['no-of-char']} 字</td>
       <td><span class="pts-chip">+${r.points}</span></td>
-    </tr>`).join('');
+    </tr>`;
+  }).join('');
 
   const redeemRows = [...d.redeem].reverse().map(r => {
     let tag = '';
@@ -330,6 +371,22 @@ fetch('font/points.json')
     document.getElementById('root').innerHTML =
       `<div class="error">无法加载 font/points.json（${err}）</div>`;
   });
+
+(function () {
+  const backdrop = document.getElementById('modal-backdrop');
+  const frame    = document.getElementById('modal-frame');
+  window.openModal = function (src) {
+    frame.src = src;
+    backdrop.classList.remove('hidden');
+  };
+  function closeModal() {
+    backdrop.classList.add('hidden');
+    frame.src = 'about:blank';
+  }
+  document.getElementById('modal-close').addEventListener('click', closeModal);
+  backdrop.addEventListener('click', e => { if (e.target === backdrop) closeModal(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+}());
 </script>
 </body>
 </html>
