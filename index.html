@@ -229,6 +229,7 @@
   <div id="modal-box">
     <div id="modal-header"><button id="modal-close" title="关闭 (Esc)">×</button></div>
     <iframe id="modal-frame" src="about:blank"></iframe>
+    <img id="modal-img" src="" alt="">
   </div>
 </div>
 
@@ -264,8 +265,8 @@ function renderTable(data) {
     const href = `${r._book}/html/${lessonKey}.html`;
     return `
     <tr>
-      <td class="name-cell"><a href="#" onclick="openModal('${href}');return false">${lessonName}</a><a href="#" class="img-icon" onclick="openModal('${r._book}/handin/${r.name}');return false" title="查看手写"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></a><br>
-          <span class="time-cell">${pageTag}</span></td>
+      <td class="name-cell"><a href="#" onclick="openModal('${href}');return false">${lessonName}</a><br>
+          <a class="time-cell" href="#" onclick="openModal('${r._book}/handin/${r.name}');return false">${pageTag}</a></td>
       <td><span class="tag tag-book">${r._book}</span></td>
       <td class="time-cell">${r.time}</td>
       <td><span class="pts-chip">+${r.points}</span></td>
@@ -379,13 +380,19 @@ fetch('font/points.json')
 (function () {
   const backdrop = document.getElementById('modal-backdrop');
   const frame    = document.getElementById('modal-frame');
+  const img      = document.getElementById('modal-img');
   window.openModal = function (src) {
-    frame.src = src;
+    if (/\.(png|jpe?g|gif|webp)$/i.test(src)) {
+      frame.style.display = 'none'; img.style.display = 'block'; img.src = src;
+    } else {
+      img.style.display = 'none'; frame.style.display = 'block'; frame.src = src;
+    }
     backdrop.classList.remove('hidden');
   };
   function closeModal() {
     backdrop.classList.add('hidden');
-    frame.src = 'about:blank';
+    frame.src = 'about:blank'; frame.style.display = 'block';
+    img.src = ''; img.style.display = 'none';
   }
   document.getElementById('modal-close').addEventListener('click', closeModal);
   backdrop.addEventListener('click', e => { if (e.target === backdrop) closeModal(); });
