@@ -167,7 +167,7 @@
       border-radius: 8px;
       font-weight: 600;
     }
-    .tag-halfday { background: var(--color-amber-light); color: var(--color-amber); }
+    .tag-book    { background: #e0f2fe; color: #0369a1; }
     .tag-hour    { background: var(--color-green-light); color: var(--color-green); }
     .tag-point   { background: var(--color-accent-light); color: var(--color-accent); }
 
@@ -201,7 +201,7 @@ function renderTable(data) {
     .sort((a, b) => a.time < b.time ? -1 : 1);
   const fontTotal = fontEntries.reduce((s, r) => s + r.points, 0);
   const readEntries = Object.entries(d['point-read'])
-    .flatMap(([, lessons]) => Object.entries(lessons).map(([key, val]) => ({key, ...val})));
+    .flatMap(([book, lessons]) => Object.entries(lessons).map(([key, val]) => ({key, _book: book, ...val})));
   const readTotal = readEntries.reduce((s, r) => s + r.points, 0);
   const redeemTotal = d.redeem.reduce((s, r) => s + r.points, 0);
   const available = d.total - redeemTotal;
@@ -224,6 +224,7 @@ function renderTable(data) {
     <tr>
       <td class="name-cell"><a href="${href}" target="_blank">${lessonName}</a><br>
           <span class="time-cell">${pageTag}</span></td>
+      <td><span class="tag tag-book">${r._book}</span></td>
       <td class="time-cell">${r.time}</td>
       <td><span class="pts-chip">+${r.points}</span></td>
     </tr>`;
@@ -232,6 +233,7 @@ function renderTable(data) {
   const readRows = [...readEntries].reverse().map(r => `
     <tr>
       <td>${r.key.replace(/^\d+_/, '')}</td>
+      <td><span class="tag tag-book">${r._book}</span></td>
       <td>${r['no-of-char']} 字</td>
       <td><span class="pts-chip">+${r.points}</span></td>
     </tr>`).join('');
@@ -290,7 +292,7 @@ function renderTable(data) {
         <span class="badge">${fontEntries.length} 次 · 共 ${fontTotal} 分</span>
       </div>
       <div class="scroll-body"><table>
-        <thead><tr><th>课文</th><th>时间</th><th>积分</th></tr></thead>
+        <thead><tr><th>课文</th><th>书</th><th>时间</th><th>积分</th></tr></thead>
         <tbody>${fontRows}</tbody>
       </table></div>
     </section>
@@ -301,7 +303,7 @@ function renderTable(data) {
         <span class="badge">${readEntries.length} 篇 · 共 ${readTotal} 分</span>
       </div>
       <div class="scroll-body"><table>
-        <thead><tr><th>课文</th><th>字数</th><th>积分</th></tr></thead>
+        <thead><tr><th>课文</th><th>书</th><th>字数</th><th>积分</th></tr></thead>
         <tbody>${readRows || '<tr><td colspan="3" style="color:var(--color-muted);padding:16px">暂无记录</td></tr>'}</tbody>
       </table></div>
     </section>
