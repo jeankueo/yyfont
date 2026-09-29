@@ -54,6 +54,18 @@
       background: none; cursor: pointer;
     }
     header .lang-link:hover { background: var(--color-accent-light); }
+    .lang-switch {
+      margin-left: 16px; display: flex;
+      border: 1px solid var(--color-accent); border-radius: 10px; overflow: hidden;
+    }
+    .lang-switch button {
+      font-size: 12px; color: var(--color-accent); padding: 2px 10px;
+      background: none; border: none; border-right: 1px solid var(--color-accent);
+      cursor: pointer; line-height: 1.6;
+    }
+    .lang-switch button:last-child { border-right: none; }
+    .lang-switch button.active { background: var(--color-accent); color: #fff; }
+    .lang-switch button:not(.active):hover { background: var(--color-accent-light); }
 
     .scroll-body { max-height: 320px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
     .scroll-body thead th { position: sticky; top: 0; z-index: 1; }
@@ -225,7 +237,11 @@
 <header>
   <h1 id="page-title">可心积分</h1>
   <span class="updated" id="updated-time"></span>
-  <a id="lang-toggle" class="lang-link" href="#" onclick="toggleLang();return false">English</a>
+  <div class="lang-switch" id="lang-switch">
+    <button data-lang="zh" onclick="setLang('zh')">中文</button>
+    <button data-lang="en" onclick="setLang('en')">EN</button>
+    <button data-lang="de" onclick="setLang('de')">DE</button>
+  </div>
   <a class="lang-link" href="https://github.com/jeankueo/yyfont" target="_blank">GitHub</a>
 </header>
 
@@ -253,7 +269,6 @@ const T = {
     loading: '加载中…',
     error: e => `无法加载 font/points.json（${e}）`,
     updatedAt: d => `更新于 ${d}`,
-    langToggle: 'English',
     closeModal: '关闭 (Esc)',
     stats: { total: '累计积分', available: '可用积分' },
     rules: {
@@ -296,7 +311,6 @@ const T = {
     loading: 'Loading…',
     error: e => `Failed to load font/points.json (${e})`,
     updatedAt: d => `Updated ${d}`,
-    langToggle: '中文',
     closeModal: 'Close (Esc)',
     stats: { total: 'Total Points', available: 'Available' },
     rules: {
@@ -334,6 +348,48 @@ const T = {
       tags: { bonus: 'bonus', halfday: 'half-day', hour: h => `${h}h`, point: 'pts' },
     },
   },
+  de: {
+    title: 'Kexin Punkte',
+    loading: 'Laden…',
+    error: e => `Fehler beim Laden von font/points.json (${e})`,
+    updatedAt: d => `Aktualisiert ${d}`,
+    closeModal: 'Schließen (Esc)',
+    stats: { total: 'Punkte gesamt', available: 'Verfügbar' },
+    rules: {
+      header: 'Punkteregeln',
+      cells: [
+        { title: 'Kalligrafie', formula: '1 Punkt je Zeichen',
+          notes: ['Zählung nach abgeschlossenen Zeichen pro Seite'] },
+        { title: 'Lesen', formula: '⌈Zeichen ÷ 20⌉ Pkt.',
+          notes: ['Aufrunden; mindestens 1 Punkt'] },
+        { title: 'Einlösen', formula: 'Halbtag 60 Pkt. · Stunde 36 Pkt.',
+          notes: ['Wochentags max. 2 Std./Woche kumulativ', 'Wochenende max. einmal Halbtag/Woche',
+                  {text: '↳ Ab 16:00 Uhr gültig für Resttag', style: 'padding-left:8px'}] },
+        { title: 'Sonderbonus', formula: 'Nach Ermessen der Eltern',
+          notes: ['Für besondere Leistungen oder Aufgaben', 'Punktzahl je nach Situation'] },
+      ],
+    },
+    font: {
+      header: 'Kalligrafie-Protokoll',
+      badge: (n, t) => `${n} Eintr. · ${t} Pkt.`,
+      cols: ['Lektion', 'Buch', 'Datum', 'Punkte'],
+      empty: 'Noch keine Einträge',
+    },
+    read: {
+      header: 'Lese-Protokoll',
+      badge: (n, t) => `${n} Texte · ${t} Pkt.`,
+      cols: ['Text', 'Buch', 'Datum', 'Zeichen', 'Punkte'],
+      chars: n => `${n} Z.`,
+      empty: 'Noch keine Einträge',
+    },
+    redeem: {
+      header: 'Spielzeit einlösen',
+      badge: (n, t) => `${n} Einl. · ${t} Pkt.`,
+      cols: ['Datum', 'Notiz', 'Punkte'],
+      empty: 'Noch keine Einträge',
+      tags: { bonus: 'Bonus', halfday: 'Halbtag', hour: h => `${h} Std.`, point: 'Pkt.' },
+    },
+  },
 };
 
 let lang = new URLSearchParams(location.search).get('lang')
@@ -342,23 +398,25 @@ let lang = new URLSearchParams(location.search).get('lang')
 let lastData = null;
 
 function applyLang(l) {
-  document.documentElement.lang = l === 'zh' ? 'zh-CN' : 'en';
+  document.documentElement.lang = l === 'zh' ? 'zh-CN' : l === 'de' ? 'de' : 'en';
   document.title = T[l].title;
   document.getElementById('page-title').textContent = T[l].title;
-  document.getElementById('lang-toggle').textContent = T[l].langToggle;
   document.getElementById('modal-close').title = T[l].closeModal;
   const loadingEl = document.getElementById('loading-text');
   if (loadingEl) loadingEl.textContent = T[l].loading;
+  document.querySelectorAll('#lang-switch button').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.lang === l);
+  });
 }
 
-function toggleLang() {
-  lang = lang === 'zh' ? 'en' : 'zh';
-  localStorage.setItem('lang', lang);
+function setLang(l) {
+  lang = l;
+  localStorage.setItem('lang', l);
   const url = new URL(location.href);
-  if (lang === 'en') url.searchParams.set('lang', 'en');
+  if (l !== 'zh') url.searchParams.set('lang', l);
   else url.searchParams.delete('lang');
   history.replaceState(null, '', url);
-  applyLang(lang);
+  applyLang(l);
   if (lastData) renderTable(lastData);
 }
 
