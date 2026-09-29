@@ -47,7 +47,12 @@
     }
     header h1 { font-size: 18px; font-weight: 700; color: var(--color-accent); }
     header .updated { margin-left: auto; font-size: 12px; color: var(--color-muted); }
-    header .lang-link { margin-left: 16px; font-size: 12px; color: var(--color-accent); text-decoration: none; border: 1px solid var(--color-accent); border-radius: 10px; padding: 2px 10px; }
+    header .lang-link {
+      margin-left: 16px; font-size: 12px; color: var(--color-accent);
+      text-decoration: none; border: 1px solid var(--color-accent);
+      border-radius: 10px; padding: 2px 10px;
+      background: none; cursor: pointer;
+    }
     header .lang-link:hover { background: var(--color-accent-light); }
 
     .scroll-body { max-height: 320px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
@@ -59,7 +64,6 @@
       padding: 24px 20px 60px;
     }
 
-    /* summary bar */
     .summary-bar {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -80,7 +84,6 @@
     .stat-card.avail .value  { color: var(--color-green); }
     .stat-card.avail.negative .value { color: var(--color-red); }
 
-    /* section */
     section {
       background: var(--color-surface);
       border: 1px solid var(--color-border);
@@ -107,7 +110,6 @@
       font-weight: 600;
     }
 
-    /* rules grid */
     .rules-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -122,7 +124,6 @@
     .rule-cell .rule-formula { font-size: 14px; font-weight: 600; color: var(--color-text); }
     .rule-cell .rule-note { font-size: 12px; color: var(--color-muted); margin-top: 4px; }
 
-    /* table */
     table { width: 100%; border-collapse: collapse; }
     thead th {
       padding: 10px 16px;
@@ -222,14 +223,14 @@
 <body>
 
 <header>
-  <h1>可心积分</h1>
+  <h1 id="page-title">可心积分</h1>
   <span class="updated" id="updated-time"></span>
-  <a class="lang-link" href="index_en.html">English</a>
+  <a id="lang-toggle" class="lang-link" href="#" onclick="toggleLang();return false">English</a>
   <a class="lang-link" href="https://github.com/jeankueo/yyfont" target="_blank">GitHub</a>
 </header>
 
 <main>
-  <div id="root"><div class="loading">加载中…</div></div>
+  <div id="root"><div class="loading" id="loading-text">加载中…</div></div>
 </main>
 
 <div id="modal-backdrop" class="hidden">
@@ -246,7 +247,122 @@
 </div>
 
 <script>
-function fmt(n) { return n >= 0 ? '+' + n : String(n); }
+const T = {
+  zh: {
+    title: '可心积分',
+    loading: '加载中…',
+    error: e => `无法加载 font/points.json（${e}）`,
+    updatedAt: d => `更新于 ${d}`,
+    langToggle: 'English',
+    closeModal: '关闭 (Esc)',
+    stats: { total: '累计积分', available: '可用积分' },
+    rules: {
+      header: '积分规则',
+      cells: [
+        { title: '抄写', formula: '每字 1 分',
+          notes: ['根据字帖行宽统计完成字数'] },
+        { title: '阅读', formula: '⌈字数 ÷ 20⌉ 分',
+          notes: ['有余数则进一，最少 1 分'] },
+        { title: '兑换', formula: '半天 60 分 · 每小时 36 分',
+          notes: ['工作日每周最多累计 2 小时', '周末每周最多兑换一次半天',
+                  {text: '↳ 16 点起批准全天', style: 'padding-left:8px'}] },
+        { title: '不定期奖励', formula: '由家长决定',
+          notes: ['表现优秀或完成特别任务', '积分数量视情况而定'] },
+      ],
+    },
+    font: {
+      header: '抄写记录',
+      badge: (n, t) => `${n} 次 · 共 ${t} 分`,
+      cols: ['课文', '书', '时间', '积分'],
+      empty: '暂无记录',
+    },
+    read: {
+      header: '阅读记录',
+      badge: (n, t) => `${n} 篇 · 共 ${t} 分`,
+      cols: ['课文', '书', '时间', '字数', '积分'],
+      chars: n => `${n} 字`,
+      empty: '暂无记录',
+    },
+    redeem: {
+      header: '游戏时间兑换',
+      badge: (n, t) => `${n} 次 · 共 ${t} 分`,
+      cols: ['时间', '说明', '积分'],
+      empty: '暂无记录',
+      tags: { bonus: '奖励', halfday: '半天', hour: h => `${h}小时`, point: '积分' },
+    },
+  },
+  en: {
+    title: 'Kexin Points',
+    loading: 'Loading…',
+    error: e => `Failed to load font/points.json (${e})`,
+    updatedAt: d => `Updated ${d}`,
+    langToggle: '中文',
+    closeModal: 'Close (Esc)',
+    stats: { total: 'Total Points', available: 'Available' },
+    rules: {
+      header: 'Scoring Rules',
+      cells: [
+        { title: 'Calligraphy', formula: '1 pt per character',
+          notes: ['Counted by characters completed per page'] },
+        { title: 'Reading', formula: '⌈characters ÷ 20⌉ pts',
+          notes: ['Rounded up; minimum 1 pt'] },
+        { title: 'Redeem', formula: 'Half-day: 60 pts · Per hour: 36 pts',
+          notes: ['Weekdays: max 2 hrs cumulative per week', 'Weekends: max one half-day per week',
+                  {text: '↳ Approved for the rest of the day from 4:00 PM', style: 'padding-left:8px'}] },
+        { title: 'Bonus', formula: "At parent's discretion",
+          notes: ['For outstanding behavior or special tasks', 'Points vary case by case'] },
+      ],
+    },
+    font: {
+      header: 'Calligraphy Log',
+      badge: (n, t) => `${n} sessions · ${t} pts`,
+      cols: ['Lesson', 'Book', 'Date', 'Points'],
+      empty: 'No entries yet',
+    },
+    read: {
+      header: 'Reading Log',
+      badge: (n, t) => `${n} texts · ${t} pts`,
+      cols: ['Text', 'Book', 'Date', 'Characters', 'Points'],
+      chars: n => `${n} chars`,
+      empty: 'No entries yet',
+    },
+    redeem: {
+      header: 'Game Time Redemption',
+      badge: (n, t) => `${n} redemptions · ${t} pts`,
+      cols: ['Date', 'Note', 'Points'],
+      empty: 'No entries yet',
+      tags: { bonus: 'bonus', halfday: 'half-day', hour: h => `${h}h`, point: 'pts' },
+    },
+  },
+};
+
+let lang = new URLSearchParams(location.search).get('lang')
+  || localStorage.getItem('lang')
+  || (navigator.language.startsWith('zh') ? 'zh' : 'en');
+let lastData = null;
+
+function applyLang(l) {
+  document.documentElement.lang = l === 'zh' ? 'zh-CN' : 'en';
+  document.title = T[l].title;
+  document.getElementById('page-title').textContent = T[l].title;
+  document.getElementById('lang-toggle').textContent = T[l].langToggle;
+  document.getElementById('modal-close').title = T[l].closeModal;
+  const loadingEl = document.getElementById('loading-text');
+  if (loadingEl) loadingEl.textContent = T[l].loading;
+}
+
+function toggleLang() {
+  lang = lang === 'zh' ? 'en' : 'zh';
+  localStorage.setItem('lang', lang);
+  const url = new URL(location.href);
+  if (lang === 'en') url.searchParams.set('lang', 'en');
+  else url.searchParams.delete('lang');
+  history.replaceState(null, '', url);
+  applyLang(lang);
+  if (lastData) renderTable(lastData);
+}
+
+applyLang(lang);
 
 const GWGZ_BASE = 'https://niuniu-869.github.io/guwenguanzhi/book/guwenguanzhi/doc/';
 const DPSH_URL  = 'https://github.com/wenyuange/poem/blob/master/%E8%AF%97%E8%AF%9D/%E4%B8%9C%E5%9D%A1%E8%AF%97%E8%AF%9D.txt';
@@ -258,6 +374,8 @@ function bookLink(book, key) {
 }
 
 function renderTable(data) {
+  lastData = data;
+  const t = T[lang];
   const d = data;
   const fontEntries = Object.entries(d['point-font'])
     .flatMap(([book, entries]) => entries.map(r => ({...r, _book: book})))
@@ -270,14 +388,13 @@ function renderTable(data) {
   const available = d.total - redeemTotal;
   const isNeg = available < 0;
 
-  // updated time from last redeem or font entry
   const times = [
     ...fontEntries.map(r => r.time),
     ...readEntries.map(r => r.time).filter(Boolean),
     ...d.redeem.map(r => r.time),
   ].sort();
   const lastTime = times[times.length - 1] || '';
-  document.getElementById('updated-time').textContent = lastTime ? '更新于 ' + lastTime.slice(0, 10) : '';
+  document.getElementById('updated-time').textContent = lastTime ? t.updatedAt(lastTime.slice(0, 10)) : '';
 
   const fontRows = [...fontEntries].reverse().map(r => {
     const lessonKey = r.name.replace(/_p\d+\.png$/, '');
@@ -302,7 +419,7 @@ function renderTable(data) {
       <td class="name-cell">${nameCell}</td>
       <td>${bookLink(r._book, r.key)}</td>
       <td class="time-cell">${r.time || ''}</td>
-      <td>${r['no-of-char']} 字</td>
+      <td>${t.read.chars(r['no-of-char'])}</td>
       <td><span class="pts-chip">+${r.points}</span></td>
     </tr>`;
   }).join('');
@@ -310,10 +427,10 @@ function renderTable(data) {
   const redeemRows = [...d.redeem].reverse().map(r => {
     const isBonus = r.points < 0;
     let tag = '';
-    if (isBonus) tag = '<span class="tag tag-point">奖励</span>';
-    else if (r.halfday) tag = '<span class="tag tag-halfday">半天</span>';
-    else if (r.hour != null) tag = `<span class="tag tag-hour">${r.hour}小时</span>`;
-    else tag = '<span class="tag tag-point">积分</span>';
+    if (isBonus) tag = `<span class="tag tag-point">${t.redeem.tags.bonus}</span>`;
+    else if (r.halfday) tag = `<span class="tag tag-halfday">${t.redeem.tags.halfday}</span>`;
+    else if (r.hour != null) tag = `<span class="tag tag-hour">${t.redeem.tags.hour(r.hour)}</span>`;
+    else tag = `<span class="tag tag-point">${t.redeem.tags.point}</span>`;
     const chip = isBonus
       ? `<span class="pts-chip bonus">+${Math.abs(r.points)}</span>`
       : `<span class="pts-chip redeem">-${r.points}</span>`;
@@ -326,77 +443,63 @@ function renderTable(data) {
     </tr>`;
   }).join('');
 
+  const rulesHtml = t.rules.cells.map(c => `
+    <div class="rule-cell">
+      <div class="rule-title">${c.title}</div>
+      <div class="rule-formula">${c.formula}</div>
+      ${c.notes.map(n => typeof n === 'string'
+        ? `<div class="rule-note">${n}</div>`
+        : `<div class="rule-note" style="${n.style}">${n.text}</div>`
+      ).join('')}
+    </div>`).join('');
+
   document.getElementById('root').innerHTML = `
     <div class="summary-bar">
       <div class="stat-card total">
-        <div class="label">累计积分</div>
+        <div class="label">${t.stats.total}</div>
         <div class="value">${d.total}</div>
       </div>
       <div class="stat-card avail ${isNeg ? 'negative' : ''}">
-        <div class="label">可用积分</div>
+        <div class="label">${t.stats.available}</div>
         <div class="value">${d.available}</div>
       </div>
     </div>
 
     <section>
-      <div class="section-header"><h2>积分规则</h2></div>
-      <div class="rules-grid">
-        <div class="rule-cell">
-          <div class="rule-title">抄写</div>
-          <div class="rule-formula">每字 1 分</div>
-          <div class="rule-note">根据字帖行宽统计完成字数</div>
-        </div>
-        <div class="rule-cell">
-          <div class="rule-title">阅读</div>
-          <div class="rule-formula">⌈字数 ÷ 20⌉ 分</div>
-          <div class="rule-note">有余数则进一，最少 1 分</div>
-        </div>
-        <div class="rule-cell">
-          <div class="rule-title">兑换</div>
-          <div class="rule-formula">半天 60 分 · 每小时 36 分</div>
-          <div class="rule-note">工作日每周最多累计 2 小时</div>
-          <div class="rule-note">周末每周最多兑换一次半天</div>
-          <div class="rule-note" style="padding-left:8px">↳ 16 点起批准全天</div>
-        </div>
-        <div class="rule-cell">
-          <div class="rule-title">不定期奖励</div>
-          <div class="rule-formula">由家长决定</div>
-          <div class="rule-note">表现优秀或完成特别任务</div>
-          <div class="rule-note">积分数量视情况而定</div>
-        </div>
-      </div>
+      <div class="section-header"><h2>${t.rules.header}</h2></div>
+      <div class="rules-grid">${rulesHtml}</div>
     </section>
 
     <section>
       <div class="section-header">
-        <h2>抄写记录</h2>
-        <span class="badge">${fontEntries.length} 次 · 共 ${fontTotal} 分</span>
+        <h2>${t.font.header}</h2>
+        <span class="badge">${t.font.badge(fontEntries.length, fontTotal)}</span>
       </div>
       <div class="scroll-body"><table>
-        <thead><tr><th>课文</th><th>书</th><th>时间</th><th>积分</th></tr></thead>
+        <thead><tr>${t.font.cols.map(c => `<th>${c}</th>`).join('')}</tr></thead>
         <tbody>${fontRows}</tbody>
       </table></div>
     </section>
 
     <section>
       <div class="section-header">
-        <h2>阅读记录</h2>
-        <span class="badge">${readEntries.length} 篇 · 共 ${readTotal} 分</span>
+        <h2>${t.read.header}</h2>
+        <span class="badge">${t.read.badge(readEntries.length, readTotal)}</span>
       </div>
       <div class="scroll-body"><table>
-        <thead><tr><th>课文</th><th>书</th><th>时间</th><th>字数</th><th>积分</th></tr></thead>
-        <tbody>${readRows || '<tr><td colspan="3" style="color:var(--color-muted);padding:16px">暂无记录</td></tr>'}</tbody>
+        <thead><tr>${t.read.cols.map(c => `<th>${c}</th>`).join('')}</tr></thead>
+        <tbody>${readRows || `<tr><td colspan="3" style="color:var(--color-muted);padding:16px">${t.read.empty}</td></tr>`}</tbody>
       </table></div>
     </section>
 
     <section>
       <div class="section-header">
-        <h2>游戏时间兑换</h2>
-        <span class="badge">${d.redeem.length} 次 · 共 ${redeemTotal} 分</span>
+        <h2>${t.redeem.header}</h2>
+        <span class="badge">${t.redeem.badge(d.redeem.length, redeemTotal)}</span>
       </div>
       <div class="scroll-body"><table>
-        <thead><tr><th>时间</th><th>说明</th><th>积分</th></tr></thead>
-        <tbody>${redeemRows || '<tr><td colspan="3" style="color:var(--color-muted);padding:16px">暂无记录</td></tr>'}</tbody>
+        <thead><tr>${t.redeem.cols.map(c => `<th>${c}</th>`).join('')}</tr></thead>
+        <tbody>${redeemRows || `<tr><td colspan="3" style="color:var(--color-muted);padding:16px">${t.redeem.empty}</td></tr>`}</tbody>
       </table></div>
     </section>
   `;
@@ -407,7 +510,7 @@ fetch('font/points.json')
   .then(renderTable)
   .catch(err => {
     document.getElementById('root').innerHTML =
-      `<div class="error">无法加载 font/points.json（${err}）</div>`;
+      `<div class="error">${T[lang].error(err)}</div>`;
   });
 
 (function () {
