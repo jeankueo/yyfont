@@ -159,6 +159,8 @@
     .img-icon:hover { color: var(--color-accent); }
     .name-cell a { color: var(--color-accent); text-decoration: none; }
     .name-cell a:hover { text-decoration: underline; }
+    .book-link { text-decoration: none; }
+    .book-link:hover .tag { opacity: 0.75; }
     .time-cell { color: var(--color-muted); font-size: 13px; white-space: nowrap; }
     .tag {
       font-size: 11px;
@@ -246,6 +248,15 @@
 <script>
 function fmt(n) { return n >= 0 ? '+' + n : String(n); }
 
+const GWGZ_BASE = 'https://niuniu-869.github.io/guwenguanzhi/book/guwenguanzhi/doc/';
+const DPSH_URL  = 'https://github.com/wenyuange/poem/blob/master/%E8%AF%97%E8%AF%9D/%E4%B8%9C%E5%9D%A1%E8%AF%97%E8%AF%9D.txt';
+function bookLink(book, key) {
+  const href = book === 'gwgz' ? GWGZ_BASE + key + '/'
+             : book === 'dpsh' ? DPSH_URL : null;
+  if (!href) return `<span class="tag tag-book">${book}</span>`;
+  return `<a class="book-link" href="#" onclick="openModal('${href}');return false"><span class="tag tag-book">${book}</span></a>`;
+}
+
 function renderTable(data) {
   const d = data;
   const fontEntries = Object.entries(d['point-font'])
@@ -277,7 +288,7 @@ function renderTable(data) {
     <tr>
       <td class="name-cell"><a href="#" onclick="openModal('${href}');return false">${lessonName}</a><br>
           <a class="time-cell" href="#" onclick="openModal('${r._book}/handin/${r.name}');return false">${pageTag}</a></td>
-      <td><span class="tag tag-book">${r._book}</span></td>
+      <td>${bookLink(r._book, lessonKey)}</td>
       <td class="time-cell">${r.time}</td>
       <td><span class="pts-chip">+${r.points}</span></td>
     </tr>`;
@@ -289,7 +300,7 @@ function renderTable(data) {
     return `
     <tr>
       <td class="name-cell">${nameCell}</td>
-      <td><span class="tag tag-book">${r._book}</span></td>
+      <td>${bookLink(r._book, r.key)}</td>
       <td class="time-cell">${r.time || ''}</td>
       <td>${r['no-of-char']} 字</td>
       <td><span class="pts-chip">+${r.points}</span></td>
