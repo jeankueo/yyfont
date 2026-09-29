@@ -12,8 +12,6 @@ font typeface -font-name Kexin -handin ./handin
 
 #逐一添加的方式生成html, 课文文件名可以通过tab辅助填写
 font publish html -font-name Kexin -text ./text/<指定课文文件名> 
-# 可心每次handin过得课文被复制到./text/done，因此字库每次更新时也可以批量化重新生成html
-font publish html -font-name Kexin -text ./text/done
 # 可心每次handin过得课文被复制到./text/done，因此字库每次更新时也可以重新生成epub
 font publish epub -font-name Kexin -text ./text/done -epub-name 古文观止-可心手抄本
 

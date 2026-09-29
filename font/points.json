@@ -1,6 +1,6 @@
 {
-  "total": 402,
-  "available": 54,
+  "total": 455,
+  "available": 71,
   "redeem": [
     {
       "time": "2026-09-27 18:46:43",
@@ -41,6 +41,12 @@
       "time": "2026-09-28 22:00:26",
       "points": -23,
       "message": "balance to 3 lines total"
+    },
+    {
+      "time": "2026-09-29 20:03:35",
+      "hour": 1.0,
+      "points": 36,
+      "message": "1h for Tue."
     }
   ],
   "point-font": {
@@ -101,6 +107,11 @@
         "name": "001_郑伯克段于鄢_p03.png",
         "time": "2026-09-19 13:05:57",
         "points": 60
+      },
+      {
+        "name": "001_郑伯克段于鄢_p04.png",
+        "time": "2026-09-29 18:00:57",
+        "points": 53
       }
     ]
   },
