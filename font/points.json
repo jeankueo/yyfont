@@ -1,6 +1,6 @@
 {
-  "total": 455,
-  "available": 71,
+  "total": 472,
+  "available": 52,
   "redeem": [
     {
       "time": "2026-09-27 18:46:43",
@@ -47,6 +47,12 @@
       "hour": 1.0,
       "points": 36,
       "message": "1h for Tue."
+    },
+    {
+      "time": "2026-10-01 18:25:08",
+      "hour": 1.0,
+      "points": 36,
+      "message": "1h for Thur."
     }
   ],
   "point-font": {
@@ -134,6 +140,12 @@
         "text": "gwgz/text/01_pre_qin/042_叔向贺贫.txt",
         "no-of-char": 351,
         "points": 18
+      },
+      "013": {
+        "time": "2026-10-01 18:24:32",
+        "text": "gwgz/text/01_pre_qin/013_子鱼论战.txt",
+        "no-of-char": 322,
+        "points": 17
       }
     },
     "dpsh": {

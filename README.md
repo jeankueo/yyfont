@@ -35,6 +35,9 @@ font point add-read -text ./text/<指定课文文件名>
 # 学习书目
 - gwgz [古文观止](https://github.com/jeankueo/guwenguanzhi)
 - dpsh [东坡诗话](https://github.com/jeankueo/poem/blob/master/%E8%AF%97%E8%AF%9D/%E4%B8%9C%E5%9D%A1%E8%AF%97%E8%AF%9D.txt)
+- zztj 资治通鉴
+    - [文白对照](http://www.ziyexing.com/files-5/zizhitongjian/zizhitongjian_index.htm)
+    - [可视化项目](https://github.com/JY0284/zizhitongjian)
 
 # 参考链接
 - [数据来源](https://github.com/niuniu-869/guwenguanzhi)
