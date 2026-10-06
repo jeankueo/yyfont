@@ -1,6 +1,6 @@
 {
   "total": 516,
-  "available": 36,
+  "available": 0,
   "redeem": [
     {
       "time": "2026-09-27 18:46:43",
@@ -59,6 +59,12 @@
       "halfday": true,
       "points": 60,
       "message": "Sat."
+    },
+    {
+      "time": "2026-10-05 18:06:46",
+      "hour": 1.0,
+      "points": 36,
+      "message": "for Mon."
     }
   ],
   "point-font": {
