@@ -1,6 +1,6 @@
 {
-  "total": 581,
-  "available": 29,
+  "total": 629,
+  "available": -19,
   "redeem": [
     {
       "time": "2026-09-27 18:46:43",
@@ -71,6 +71,18 @@
       "hour": 1.0,
       "points": 36,
       "message": "mon."
+    },
+    {
+      "time": "2026-10-17 18:27:38",
+      "hour": 1.0,
+      "points": 36,
+      "message": "Fri."
+    },
+    {
+      "time": "2026-10-17 18:27:55",
+      "halfday": true,
+      "points": 60,
+      "message": "Sat."
     }
   ],
   "point-font": {
@@ -156,6 +168,16 @@
         "name": "111_谏太宗十思疏_p01.png",
         "time": "2026-10-15 19:09:28",
         "points": 1
+      },
+      {
+        "name": "108_桃花源记_p01.png",
+        "time": "2026-10-15 19:24:42",
+        "points": 12
+      },
+      {
+        "name": "046_春王正月_p01.png",
+        "time": "2026-10-15 19:30:13",
+        "points": 8
       }
     ]
   },
@@ -184,6 +206,12 @@
         "text": "gwgz/text/01_pre_qin/013_子鱼论战.txt",
         "no-of-char": 322,
         "points": 17
+      },
+      "041_敬姜论劳逸": {
+        "time": "2026-10-17 18:26:42",
+        "text": "gwgz/text/01_pre_qin/041_敬姜论劳逸.txt",
+        "no-of-char": 560,
+        "points": 28
       }
     },
     "dpsh": {
