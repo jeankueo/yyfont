@@ -1,6 +1,6 @@
 {
-  "total": 647,
-  "available": -1,
+  "total": 654,
+  "available": 6,
   "redeem": [
     {
       "time": "2026-09-27 18:46:43",
@@ -226,6 +226,12 @@
         "text": "dpsh/text/20260908/003_与少游小妹_墨斗.txt",
         "no-of-char": 360,
         "points": 18
+      },
+      "004_朝云一肚皮": {
+        "time": "2026-10-18 19:28:39",
+        "text": "dpsh/text/20260927/004_朝云一肚皮.txt",
+        "no-of-char": 129,
+        "points": 7
       }
     }
   }
