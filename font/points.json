@@ -1,5 +1,5 @@
 {
-  "total": 654,
+  "total": 690,
   "available": 6,
   "redeem": [
     {
@@ -83,6 +83,12 @@
       "halfday": true,
       "points": 60,
       "message": "Sat."
+    },
+    {
+      "time": "2026-10-20 19:18:48",
+      "hour": 1.0,
+      "points": 36,
+      "message": "Mon."
     }
   ],
   "point-font": {
@@ -178,6 +184,11 @@
         "name": "046_春王正月_p01.png",
         "time": "2026-10-15 19:30:13",
         "points": 8
+      },
+      {
+        "name": "094_治安策一_p01.png",
+        "time": "2026-10-20 19:14:15",
+        "points": 36
       }
     ]
   },
