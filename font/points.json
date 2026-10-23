@@ -1,6 +1,6 @@
 {
-  "total": 690,
-  "available": 6,
+  "total": 728,
+  "available": 8,
   "redeem": [
     {
       "time": "2026-09-27 18:46:43",
@@ -89,6 +89,12 @@
       "hour": 1.0,
       "points": 36,
       "message": "Mon."
+    },
+    {
+      "time": "2026-10-23 14:43:57",
+      "hour": 1.0,
+      "points": 36,
+      "message": "Thur."
     }
   ],
   "point-font": {
@@ -189,6 +195,11 @@
         "name": "094_治安策一_p01.png",
         "time": "2026-10-20 19:14:15",
         "points": 36
+      },
+      {
+        "name": "028_季札观周乐_p01.png",
+        "time": "2026-10-22 17:59:29",
+        "points": 38
       }
     ]
   },
