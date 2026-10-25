@@ -1,6 +1,6 @@
 {
-  "total": 728,
-  "available": 8,
+  "total": 757,
+  "available": 7,
   "redeem": [
     {
       "time": "2026-09-27 18:46:43",
@@ -95,6 +95,17 @@
       "hour": 1.0,
       "points": 36,
       "message": "Thur."
+    },
+    {
+      "time": "2026-10-25 16:17:30",
+      "points": -30,
+      "message": "bonus for Herbst Ferien Babysitting"
+    },
+    {
+      "time": "2026-10-25 16:18:49",
+      "halfday": true,
+      "points": 60,
+      "message": "Sun."
     }
   ],
   "point-font": {
@@ -234,6 +245,18 @@
         "text": "gwgz/text/01_pre_qin/041_敬姜论劳逸.txt",
         "no-of-char": 560,
         "points": 28
+      },
+      "003_石碏谏宠州吁": {
+        "time": "2026-10-25 16:18:02",
+        "text": "gwgz/text/01_pre_qin/003_石碏谏宠州吁.txt",
+        "no-of-char": 296,
+        "points": 15
+      },
+      "004_臧僖伯谏观鱼": {
+        "time": "2026-10-25 16:18:07",
+        "text": "gwgz/text/01_pre_qin/004_臧僖伯谏观鱼.txt",
+        "no-of-char": 274,
+        "points": 14
       }
     },
     "dpsh": {
