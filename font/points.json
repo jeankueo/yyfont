@@ -1,6 +1,6 @@
 {
-  "total": 953,
-  "available": 53,
+  "total": 981,
+  "available": 21,
   "redeem": [
     {
       "time": "2026-09-27 18:46:43",
@@ -129,6 +129,12 @@
       "halfday": true,
       "points": 60,
       "message": "ferien"
+    },
+    {
+      "time": "2026-10-30 18:35:46",
+      "halfday": true,
+      "points": 60,
+      "message": "Fri in Ferien"
     }
   ],
   "point-font": {
@@ -259,6 +265,11 @@
         "name": "005_郑庄公戒饬守臣_p01.png",
         "time": "2026-10-29 16:15:39",
         "points": 60
+      },
+      {
+        "name": "005_郑庄公戒饬守臣_p02.png",
+        "time": "2026-10-30 18:45:46",
+        "points": 28
       }
     ]
   },
