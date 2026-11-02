@@ -1,6 +1,6 @@
 {
   "total": 981,
-  "available": 21,
+  "available": 81,
   "redeem": [
     {
       "time": "2026-09-27 18:46:43",
@@ -135,6 +135,21 @@
       "halfday": true,
       "points": 60,
       "message": "Fri in Ferien"
+    },
+    {
+      "time": "2026-11-02 18:30:10",
+      "points": -60,
+      "message": "Ferien baby sitting"
+    },
+    {
+      "time": "2026-11-02 18:30:34",
+      "points": 10,
+      "message": "leave bottle open in toilet over night"
+    },
+    {
+      "time": "2026-11-02 18:30:56",
+      "points": -10,
+      "message": "babysit on Mon."
     }
   ],
   "point-font": {
