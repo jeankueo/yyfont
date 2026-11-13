@@ -1,6 +1,6 @@
 {
   "total": 1066,
-  "available": 84,
+  "available": 48,
   "redeem": [
     {
       "time": "2026-09-27 18:46:43",
@@ -167,6 +167,12 @@
       "time": "2026-11-09 22:24:28",
       "points": 10,
       "message": "punishment: too much time on toilet"
+    },
+    {
+      "time": "2026-11-12 18:34:09",
+      "hour": 1.0,
+      "points": 36,
+      "message": "Thurs."
     }
   ],
   "point-font": {
